@@ -1,0 +1,11 @@
+{
+    "name": "ben/urbano-test",
+    "description": "Exercise from Urbano",
+    "authors": [
+        {
+            "name": "Benjamin Org",
+            "email": "ben.ortizg@gmail.com"
+        }
+    ],
+    "require": {}
+}
