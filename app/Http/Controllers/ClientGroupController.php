@@ -26,7 +26,7 @@ class ClientGroupController extends Controller
     }
 
     /**
-     * List all Client Groups
+     * List all Client Groups.
      *
      * @return object
      */
