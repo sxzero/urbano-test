@@ -52,7 +52,7 @@ if (!function_exists('resource_path')) {
      * @param string $path
      * @return string
      */
-    function config_path($path = '')
+    function resource_path($path = '')
     {
         return base_path("resources/{$path}");
     }
@@ -65,9 +65,22 @@ if (!function_exists('views_path')) {
      * @param string $path
      * @return string
      */
-    function config_path($path = '')
+    function views_path($path = '')
     {
         return base_path("resources/views/{$path}");
+    }
+}
+
+if (!function_exists('public_path')) {
+    /**
+     * Return the public folder path
+     *
+     * @param string $path
+     * @return string
+     */
+    function public_path($path = '')
+    {
+        return base_path("public/{$path}");
     }
 }
 
@@ -108,4 +121,3 @@ if (!function_exists('dd')) {
         die;
     }
 }
-

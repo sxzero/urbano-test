@@ -18,3 +18,17 @@ $env->load();
  * =================================.
  */
 require config_path('database.php');
+
+/*
+ * =================================
+ * |    Illuminate/Validator
+ * =================================.
+ */
+// require config_path('Providers/ValidatorFactory.php');
+
+/*
+ * =================================
+ * |    Routes
+ * =================================.
+ */
+require config_path('routes.php');
