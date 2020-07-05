@@ -18,4 +18,12 @@ class ClientGroup extends Model
     ];
     
     protected $guarded = [];
+
+    /**
+     * Get the Clients.
+     */
+    public function clients()
+    {
+        return $this->hasMany('App\Client');
+    }
 }

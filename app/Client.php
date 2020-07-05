@@ -12,14 +12,25 @@ class Client extends Model
     * @var bool
     */
     public $timestamps = false;
+
+    protected $hidden = ['notes'];
     
     protected $fillable = [
         'name',
         'lastname',
         'email',
-        'client_group',
+        'client_group_id',
         'notes'
     ];
     
     protected $guarded = [];
+
+
+    /**
+     * Get the Client Group that owns the client
+     */
+    public function client_group()
+    {
+        return $this->belongsTo('App\ClientGroup');
+    }
 }

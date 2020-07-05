@@ -64,6 +64,34 @@ class ClientGroupController extends Controller
     }
 
     /**
+     * Return all results from query
+     *
+     * @param \Klein\Request $request
+     * @return object
+     */
+    public function filter($request)
+    {
+        try {
+            $name = $request->name;
+
+            if (empty($name)) {
+                return $this->jsonErrorResponse('The name param is required', 422);
+            }
+
+            $client_group = $this->client_group->whereName($name)->get();
+
+            if (empty($client_group)){
+                return $this->jsonErrorResponse('The client group does not exists', 404);
+            }
+            
+            return $this->responseFormat($client_group, 200, 'Client Group');
+
+        } catch (\Throwable $th) {
+            return $this->jsonErrorResponse($th->getMessage(), 500);
+        }
+    }
+
+    /**
      * Create a new Client Group
      *
      * @param \Klein\Request $request

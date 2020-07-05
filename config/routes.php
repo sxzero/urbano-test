@@ -1,4 +1,3 @@
 <?php
 
-require base_path('routes/api.php');
-require base_path('routes/web.php');
+require base_path('routes/routes.php');

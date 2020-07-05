@@ -33,7 +33,7 @@ class ClientController extends Controller
     public function index()
     {
         try {
-            $clients = $this->client->all();
+            $clients = $this->client->with('client_group')->get();
 
             return $this->responseFormat($clients, 200, 'Clients');
         } catch (\Throwable $th) {
@@ -50,13 +50,42 @@ class ClientController extends Controller
     public function get($id)
     {
         try {
-            $client = $this->client->find($id);
+            $client = $this->client->with('client_group')->find($id);
 
             if (empty($client)){
                 return $this->jsonErrorResponse('The client does not exists', 404);
             }
-            
+
             return $this->responseFormat($client, 200, 'Client');
+
+        } catch (\Throwable $th) {
+            return $this->jsonErrorResponse($th->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Return all results from query
+     *
+     * @param \Klein\Request $request
+     * @return object
+     */
+    public function filter($request)
+    {
+        try {
+            $params = array_filter([
+                'name' => $request->client_search_name,
+                'lastname' => $request->client_search_lastname,
+                'email' => $request->client_search_email,
+                'client_group_id' => $request->client_search_group_id,
+            ]);
+
+            $clients = ($this->client->with('client_group')->where($params)->get())->toArray();
+            
+            if (empty($clients)){
+                return $this->jsonErrorResponse('Not found results', 404);
+            }
+            
+            return $this->responseFormat($clients, 200, 'Clients');
 
         } catch (\Throwable $th) {
             return $this->jsonErrorResponse($th->getMessage(), 500);
@@ -76,7 +105,7 @@ class ClientController extends Controller
                 'name' => $request->client_name,
                 'lastname' => $request->client_lastname,
                 'email' => $request->client_email,
-                'client_group' => $request->client_group,
+                'client_group_id' => $request->client_group_id,
                 'notes' => $request->client_notes
             ];
     
@@ -84,7 +113,7 @@ class ClientController extends Controller
                 'name' => 'required',
                 'lastname' => 'required',
                 'email' => 'required|email',
-                'client_group' => 'required|numeric|min:1'
+                'client_group_id' => 'required|numeric|min:1'
             ];
     
             $validate = $this->validator->validate($data, $rules);
@@ -100,7 +129,7 @@ class ClientController extends Controller
             }
 
             $client_group = new \App\ClientGroup();
-            if (empty($client_group->find($data['client_group']))){
+            if (empty($client_group->find($data['client_group_id']))){
                 return $this->jsonErrorResponse('The client group is not valid', 400);
             }
 
@@ -128,7 +157,7 @@ class ClientController extends Controller
                 'name' => $request->client_name,
                 'lastname' => $request->client_lastname,
                 'email' => $request->client_email,
-                'client_group' => $request->client_group,
+                'client_group_id' => $request->client_group_id,
                 'notes' => $request->client_notes
             ];
     
@@ -136,7 +165,7 @@ class ClientController extends Controller
                 'name' => 'required',
                 'lastname' => 'required',
                 'email' => 'required|email',
-                'client_group' => 'required|numeric|min:1'
+                'client_group_id' => 'required|numeric|min:1'
             ];
     
             $validate = $this->validator->validate($data, $rules);
@@ -158,7 +187,7 @@ class ClientController extends Controller
             }
 
             $client_group = new \App\ClientGroup();
-            if (empty($client_group->find($data['client_group']))){
+            if (empty($client_group->find($data['client_group_id']))){
                 return $this->jsonErrorResponse('The client group is not valid', 400);
             }
 

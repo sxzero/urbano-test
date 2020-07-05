@@ -1,7 +1,12 @@
 <?php
 $router = new \Klein\Klein();
 
-$router->with('/api', function () use ($router) {
+/*
+* =================================
+* |    API
+* =================================
+*/
+$router->with('/api/v1', function () use ($router) {
 
     /*
     * =================================
@@ -18,6 +23,13 @@ $router->with('/api', function () use ($router) {
     $router->respond('POST', '/clients/?', function ($request) {
         $clients = new \App\Http\Controllers\ClientController($request->format);
         $clients->store($request);
+
+        return;
+    });
+
+    $router->respond('GET', '/clients/search/?', function ($request) {
+        $clients = new \App\Http\Controllers\ClientController($request->format);
+        $clients->filter($request);
 
         return;
     });
@@ -43,6 +55,7 @@ $router->with('/api', function () use ($router) {
         return;
     });
 
+
     /*
     * =================================
     * |    Client Groups
@@ -58,6 +71,13 @@ $router->with('/api', function () use ($router) {
     $router->respond('POST', '/client-groups/?', function ($request) {
         $client_groups = new \App\Http\Controllers\ClientGroupController($request->format);
         $client_groups->store($request);
+
+        return;
+    });
+
+    $router->respond('GET', '/client-groups/search/?', function ($request) {
+        $client_groups = new \App\Http\Controllers\ClientGroupController($request->format);
+        $client_groups->filter($request);
 
         return;
     });
@@ -82,7 +102,40 @@ $router->with('/api', function () use ($router) {
 
         return;
     });
+});
 
+/*
+* =================================
+* |    WEB
+* =================================
+*/
+$router->respond('GET', '/', function ($request, $response, $service) {
+    $service->title = 'Urbano Express | Exercise';
+    $service->escape = function ($str) {
+        return htmlentities($str);
+    };
+
+    $service->render(views_path('home.php'));
+
+    return;
+});
+
+$router->respond('GET', '/home', function ($request, $response, $service) {
+   $service->render(views_path('pages/home.php'));
+
+   return;
+});
+
+$router->respond('GET', '/clients', function ($request, $response, $service) {
+   $service->render(views_path('pages/clients.php'));
+
+   return;
+});
+
+$router->respond('GET', '/clients-groups', function ($request, $response, $service) {
+   $service->render(views_path('pages/clients_groups.php'));
+
+   return;
 });
 
 $router->dispatch();
