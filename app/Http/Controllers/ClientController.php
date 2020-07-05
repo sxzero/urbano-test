@@ -79,7 +79,7 @@ class ClientController extends Controller
                 'client_group_id' => $request->client_search_group_id,
             ]);
 
-            $clients = ($this->client->with('client_group')->where($params)->get())->toArray();
+            $clients = $this->client->with('client_group')->where($params)->get();
             
             if (empty($clients)){
                 return $this->jsonErrorResponse('Not found results', 404);

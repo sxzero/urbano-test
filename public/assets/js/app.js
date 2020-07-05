@@ -29,6 +29,16 @@ function errorAlert() {
     });
 }
 
+function waitForElement(elementPath, callBack) {
+  window.setTimeout(function () {
+    if ($(elementPath).length) {
+      callBack(elementPath, $(elementPath));
+    } else {
+      waitForElement(elementPath, callBack);
+    }
+  }, 500);
+}
+
 /**
  * Convert a collection of objects from API response data to html td.
  *
@@ -116,8 +126,9 @@ function getGroupsAsOptions(e, dropdown, model) {
 
       dropdown.append(
         $("<option />")
-          .text('Seleccionar')
-      );
+        .val(null)
+        .text("Seleccionar")
+      ).promise();
 
       for (var i = 0; i < data.length; i++) {
         dropdown.append(
@@ -140,9 +151,7 @@ function requestApi(endpoint, method = "GET", dataContent = "") {
   return $.ajax({
     type: method,
     url: api_uri + endpoint,
-    // dataType: "JSON",
     data: dataContent,
-    // async: false,
     success: function (response) {
       successAlert();
 
@@ -334,17 +343,7 @@ $(document).ready(function () {
     getGroupsAsOptions(e, dropdown, api_ed_clients);
   });
   $(document).on("click", "[data-load='/clients']", function (e) {
-    var waitForEl = function(selector, callback) {
-      if (jQuery(selector).length) {
-        callback();
-      } else {
-        setTimeout(function() {
-          waitForEl(selector, callback);
-        }, 100);
-      }
-    };
-    
-    waitForEl('#client_search_group_id', function() {
+    waitForElement("#client_search_group_id", function () {
       var dropdown = $(document).find("#client_search_group_id");
       getGroupsAsOptions(e, dropdown, api_ed_client_groups);
     });
@@ -360,7 +359,7 @@ $(document).ready(function () {
     var serializedData = form.serialize();
 
     if (serializedData) {
-      requestApi(api_ed_clients + "/search", 'GET', serializedData)
+      requestApi(api_ed_clients + "/search", "GET", serializedData)
         .promise()
         .done(function (response) {
           row = objectToTableRows(response.data);
